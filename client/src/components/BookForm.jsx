@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import './BookForm.css';
 
 const BookForm = ({ onBookAdded }) => {
-  // useState hook to manage form inputs
+  // State for form input fields
   const [formData, setFormData] = useState({
     title: '',
     author: '',
@@ -14,19 +14,18 @@ const BookForm = ({ onBookAdded }) => {
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
 
-  // Handle input changes
+  // Update form state when input values change
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData(prevState => ({
       ...prevState,
       [name]: value
     }));
-    // Clear messages on input change
     setError('');
     setSuccess('');
   };
 
-  // Handle form submission
+  // Submit new book to backend API
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsSubmitting(true);
@@ -40,9 +39,9 @@ const BookForm = ({ onBookAdded }) => {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          title: formData.title,
-          author: formData.author,
-          isbn: formData.isbn,
+          title: formData.title.trim(),
+          author: formData.author.trim(),
+          isbn: formData.isbn.trim(),
           year: parseInt(formData.year)
         }),
       });
@@ -50,24 +49,28 @@ const BookForm = ({ onBookAdded }) => {
       const data = await response.json();
 
       if (response.ok && data.success) {
-        setSuccess('Book added successfully!');
-        // Reset form
+        setSuccess(data.message || 'Book added successfully!');
+        
+        // Reset form fields after successful submission
         setFormData({
           title: '',
           author: '',
           isbn: '',
           year: ''
         });
-        // Notify parent component to refresh book list
+        
+        // Notify parent component to update book list
         if (onBookAdded) {
           onBookAdded(data.data);
         }
       } else {
-        setError(data.message || 'Failed to add book');
+        // Display user-friendly error message from server
+        setError(data.message || 'Failed to add book. Please try again.');
       }
     } catch (err) {
-      setError('Error connecting to server. Please try again.');
-      console.error('Error:', err);
+      // Handle network or connection errors
+      setError('Unable to connect to server. Please check your connection and try again.');
+      console.error('Network error adding book:', err);
     } finally {
       setIsSubmitting(false);
     }

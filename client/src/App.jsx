@@ -4,17 +4,17 @@ import BookForm from './components/BookForm.jsx';
 import BookList from './components/BookList.jsx';
 
 function App() {
-  // useState hook to manage book list
+  // State management for books, loading, and error states
   const [books, setBooks] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState('');
 
-  // useEffect hook to fetch books from backend on component mount
+  // Fetch books from API when component mounts
   useEffect(() => {
     fetchBooks();
-  }, []); // Empty dependency array means this runs once on mount
+  }, []);
 
-  // Fetch all books from the API
+  // Retrieve all books from backend API
   const fetchBooks = async () => {
     try {
       setIsLoading(true);
@@ -26,22 +26,24 @@ function App() {
       if (response.ok && data.success) {
         setBooks(data.data);
       } else {
-        setError('Failed to load books');
+        // Display user-friendly error message
+        setError(data.message || 'Failed to load books. Please refresh the page.');
       }
     } catch (err) {
-      setError('Error connecting to server');
-      console.error('Error fetching books:', err);
+      // Handle network or connection errors
+      setError('Unable to connect to server. Please check your connection and try again.');
+      console.error('Network error fetching books:', err);
     } finally {
       setIsLoading(false);
     }
   };
 
-  // Handle when a book is added - update UI dynamically without reloading
+  // Add newly created book to the list without reloading
   const handleBookAdded = (newBook) => {
     setBooks(prevBooks => [newBook, ...prevBooks]);
   };
 
-  // Handle when a book is deleted - update UI dynamically without reloading
+  // Remove deleted book from the list without reloading
   const handleBookDeleted = (bookId) => {
     setBooks(prevBooks => prevBooks.filter(book => book._id !== bookId));
   };
@@ -54,12 +56,13 @@ function App() {
       </header>
 
       <main className="app-main">
+        {/* Display error banner if any errors occur */}
         {error && <div className="error-banner">{error}</div>}
         
-        {/* Book entry form component with props passing */}
+        {/* Book entry form with callback for adding books */}
         <BookForm onBookAdded={handleBookAdded} />
         
-        {/* Book list component with props passing and component reusability */}
+        {/* Book list display with delete functionality */}
         <BookList 
           books={books} 
           onBookDeleted={handleBookDeleted}

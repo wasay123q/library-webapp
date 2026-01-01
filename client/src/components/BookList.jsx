@@ -2,8 +2,9 @@ import React from 'react';
 import './BookList.css';
 
 const BookList = ({ books, onBookDeleted, isLoading }) => {
-  // Handle delete book
+  // Delete book with confirmation and error handling
   const handleDelete = async (bookId, bookTitle) => {
+    // Confirm deletion with user
     if (!window.confirm(`Are you sure you want to delete "${bookTitle}"?`)) {
       return;
     }
@@ -16,19 +17,22 @@ const BookList = ({ books, onBookDeleted, isLoading }) => {
       const data = await response.json();
 
       if (response.ok && data.success) {
-        // Notify parent component to refresh book list
+        // Update parent component to remove book from list
         if (onBookDeleted) {
           onBookDeleted(bookId);
         }
       } else {
-        alert('Failed to delete book: ' + (data.message || 'Unknown error'));
+        // Display user-friendly error message from server
+        alert(data.message || 'Failed to delete book. Please try again.');
       }
     } catch (err) {
-      alert('Error connecting to server. Please try again.');
-      console.error('Error:', err);
+      // Handle network or connection errors
+      alert('Unable to connect to server. Please check your connection and try again.');
+      console.error('Network error deleting book:', err);
     }
   };
 
+  // Show loading state while fetching books
   if (isLoading) {
     return (
       <div className="book-list-container">

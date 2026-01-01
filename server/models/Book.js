@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-// Define Book Schema
+// Define Mongoose schema for book documents
 const bookSchema = new mongoose.Schema({
   title: {
     type: String,
@@ -25,10 +25,10 @@ const bookSchema = new mongoose.Schema({
     max: [new Date().getFullYear(), 'Year cannot be in the future']
   }
 }, {
-  timestamps: true // Adds createdAt and updatedAt fields
+  timestamps: true // Automatically add createdAt and updatedAt fields
 });
 
-// Create and export Book model
+// Create Book model from schema and export
 const Book = mongoose.model('Book', bookSchema);
 
 module.exports = Book;

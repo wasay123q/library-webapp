@@ -4,108 +4,137 @@ const dotenv = require('dotenv');
 const connectDB = require('./db');
 const Book = require('./models/Book');
 
-// Load environment variables
+// Load environment variables from .env file
 dotenv.config();
 
-// Initialize Express app
+// Initialize Express application
 const app = express();
 
-// Middleware
+// Apply middleware for JSON parsing and CORS
 app.use(express.json()); 
 app.use(cors()); 
 
-// Connect to MongoDB
+// Establish MongoDB database connection
 connectDB();
 
+// ==================== API ROUTES ====================
 
+// GET /api/books - Retrieve all books from database
 app.get('/api/books', async (req, res) => {
   try {
-    const books = await Book.find().sort({ createdAt: -1 }); // Sort by newest first
+    const books = await Book.find().sort({ createdAt: -1 }); 
+    
     res.status(200).json({
       success: true,
       count: books.length,
       data: books
     });
   } catch (error) {
-    console.error('Error fetching books:', error);
+    console.error('Database error fetching books:', error.message);
+    
     res.status(500).json({
       success: false,
-      message: 'Failed to retrieve books',
-      error: error.message
+      message: 'Failed to retrieve books from database. Please try again later.'
     });
   }
 });
 
-// POST /api/books 
+// POST /api/books - Add a new book to database
 app.post('/api/books', async (req, res) => {
   try {
     const { title, author, isbn, year } = req.body;
 
-    // Validate required fields
+    // Validate all required fields are present
     if (!title || !author || !isbn || !year) {
       return res.status(400).json({
         success: false,
-        message: 'Please provide all required fields: title, author, isbn, year'
+        message: 'All fields are required. Please fill in title, author, ISBN, and year.'
       });
     }
 
-    // Create new book
+    // Validate year is a valid number
+    const yearNum = parseInt(year);
+    if (isNaN(yearNum) || yearNum < 1000 || yearNum > new Date().getFullYear()) {
+      return res.status(400).json({
+        success: false,
+        message: 'Please enter a valid publication year.'
+      });
+    }
+
+    // Create new book document in database
     const book = await Book.create({
-      title,
-      author,
-      isbn,
-      year
+      title: title.trim(),
+      author: author.trim(),
+      isbn: isbn.trim(),
+      year: yearNum
     });
 
     res.status(201).json({
       success: true,
-      message: 'Book added successfully',
+      message: 'Book added successfully!',
       data: book
     });
   } catch (error) {
-    console.error('Error adding book:', error);
+    console.error('Database error adding book:', error.message);
     
-    // Handle duplicate ISBN error
+    // Handle duplicate ISBN constraint violation
     if (error.code === 11000) {
       return res.status(400).json({
         success: false,
-        message: 'A book with this ISBN already exists'
+        message: 'A book with this ISBN already exists in the library.'
+      });
+    }
+
+    // Handle mongoose validation errors
+    if (error.name === 'ValidationError') {
+      return res.status(400).json({
+        success: false,
+        message: 'Invalid book data. Please check your inputs.'
       });
     }
 
     res.status(500).json({
       success: false,
-      message: 'Failed to add book',
-      error: error.message
+      message: 'Failed to add book to database. Please try again.'
     });
   }
 });
 
-// DELETE /api/books/:id 
+// DELETE /api/books/:id - Remove a book by ID from database
 app.delete('/api/books/:id', async (req, res) => {
   try {
     const { id } = req.params;
 
+    // Validate MongoDB ObjectId format
+    if (!id.match(/^[0-9a-fA-F]{24}$/)) {
+      return res.status(400).json({
+        success: false,
+        message: 'Invalid book ID format.'
+      });
+    }
+
+    // Attempt to find and delete book
     const book = await Book.findByIdAndDelete(id);
 
+    // Check if book exists in database
     if (!book) {
       return res.status(404).json({
         success: false,
-        message: 'Book not found'
+        message: 'Book not found in the library.'
       });
     }
 
     res.status(200).json({
       success: true,
-      message: 'Book deleted successfully',
+      message: 'Book deleted successfully!',
       data: book
     });
   } catch (error) {
-    console.error('Error deleting book:', error);
+    console.error('Database error deleting book:', error.message);
+    
     res.status(500).json({
       success: false,
-      message: 'Failed to delete book',
-      error: error.message
+      message: 'Failed to delete book from database. Please try again.'
     });
   }
 });
