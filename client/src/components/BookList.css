@@ -1,0 +1,256 @@
+.book-list-container {
+  background: white;
+  border-radius: 12px;
+  padding: 30px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.book-list-container h2 {
+  color: #333;
+  margin-bottom: 25px;
+  font-size: 28px;
+  text-align: center;
+  font-weight: 600;
+}
+
+/* Loading and Empty States */
+.loading,
+.empty-state {
+  text-align: center;
+  padding: 40px 20px;
+  color: #666;
+  font-size: 16px;
+}
+
+.empty-state p {
+  margin: 10px 0;
+}
+
+/* Card Layout (Default for mobile) */
+.book-cards {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 20px;
+}
+
+.book-card {
+  border: 2px solid #e0e0e0;
+  border-radius: 10px;
+  overflow: hidden;
+  transition: all 0.3s ease;
+  background: white;
+}
+
+.book-card:hover {
+  box-shadow: 0 5px 15px rgba(102, 126, 234, 0.2);
+  border-color: #667eea;
+  transform: translateY(-3px);
+}
+
+.book-card-header {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  padding: 20px;
+  color: white;
+}
+
+.book-title {
+  font-size: 20px;
+  font-weight: 600;
+  margin: 0;
+}
+
+.book-card-body {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.book-detail {
+  display: flex;
+  justify-content: space-between;
+  padding: 8px 0;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.detail-label {
+  font-weight: 600;
+  color: #666;
+  font-size: 14px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.detail-value {
+  color: #333;
+  font-size: 15px;
+  text-align: right;
+}
+
+.book-card-footer {
+  padding: 15px 20px;
+  background: #fafafa;
+  border-top: 1px solid #e0e0e0;
+}
+
+/* Table Layout (Hidden on mobile) */
+.book-table-wrapper {
+  display: none;
+  overflow-x: auto;
+}
+
+.book-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+
+.book-table thead {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+}
+
+.book-table th {
+  padding: 15px;
+  text-align: left;
+  font-weight: 600;
+  font-size: 14px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.book-table tbody tr {
+  border-bottom: 1px solid #e0e0e0;
+  transition: background-color 0.2s ease;
+}
+
+.book-table tbody tr:hover {
+  background-color: #f8f8ff;
+}
+
+.book-table td {
+  padding: 15px;
+  color: #333;
+  font-size: 15px;
+}
+
+/* Delete Button */
+.btn-delete {
+  padding: 10px 20px;
+  background: #ff4757;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  width: 100%;
+}
+
+.btn-delete:hover {
+  background: #ff3838;
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(255, 71, 87, 0.3);
+}
+
+.btn-delete:active {
+  transform: translateY(0);
+}
+
+/* Tablet and larger screens - Show both card and table */
+@media screen and (min-width: 769px) {
+  .book-cards {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  /* Show table, hide cards on desktop */
+  .book-table-wrapper {
+    display: block;
+  }
+  
+  .book-cards {
+    display: none;
+  }
+  
+  .btn-delete {
+    width: auto;
+    padding: 8px 16px;
+  }
+}
+
+/* Large screens */
+@media screen and (min-width: 1024px) {
+  .book-cards {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+/* Responsive Design - Mobile devices (320px and above) */
+@media screen and (max-width: 768px) {
+  .book-list-container {
+    padding: 20px;
+  }
+
+  .book-list-container h2 {
+    font-size: 24px;
+    margin-bottom: 20px;
+  }
+
+  .book-card-header {
+    padding: 15px;
+  }
+
+  .book-title {
+    font-size: 18px;
+  }
+
+  .book-card-body {
+    padding: 15px;
+    gap: 10px;
+  }
+
+  .detail-label,
+  .detail-value {
+    font-size: 13px;
+  }
+
+  .book-card-footer {
+    padding: 12px 15px;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .book-list-container {
+    padding: 15px;
+  }
+
+  .book-list-container h2 {
+    font-size: 20px;
+  }
+
+  .book-title {
+    font-size: 16px;
+  }
+}
+
+@media screen and (max-width: 320px) {
+  .book-list-container {
+    padding: 12px;
+  }
+
+  .book-card-header {
+    padding: 12px;
+  }
+
+  .book-card-body {
+    padding: 12px;
+  }
+
+  .btn-delete {
+    padding: 8px 16px;
+    font-size: 13px;
+  }
+}

@@ -1,0 +1,112 @@
+.App {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.app-header {
+  text-align: center;
+  padding: 30px 20px;
+  color: white;
+  margin-bottom: 30px;
+}
+
+.app-header h1 {
+  font-size: 42px;
+  margin-bottom: 10px;
+  font-weight: 700;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.app-header p {
+  font-size: 18px;
+  opacity: 0.95;
+  font-weight: 300;
+}
+
+.app-main {
+  flex: 1;
+  max-width: 1200px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+.error-banner {
+  background-color: #ff4757;
+  color: white;
+  padding: 15px 20px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  text-align: center;
+  font-weight: 500;
+  box-shadow: 0 4px 10px rgba(255, 71, 87, 0.3);
+}
+
+.app-footer {
+  text-align: center;
+  padding: 25px 20px;
+  color: white;
+  margin-top: 50px;
+  font-size: 14px;
+  opacity: 0.9;
+}
+
+/* Responsive Design - Mobile devices (320px and above) */
+@media screen and (max-width: 768px) {
+  .app-header {
+    padding: 25px 15px;
+    margin-bottom: 20px;
+  }
+
+  .app-header h1 {
+    font-size: 32px;
+  }
+
+  .app-header p {
+    font-size: 16px;
+  }
+
+  .app-main {
+    padding: 0 15px;
+  }
+
+  .app-footer {
+    padding: 20px 15px;
+    margin-top: 40px;
+    font-size: 13px;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .app-header h1 {
+    font-size: 28px;
+  }
+
+  .app-header p {
+    font-size: 15px;
+  }
+
+  .app-main {
+    padding: 0 10px;
+  }
+}
+
+@media screen and (max-width: 320px) {
+  .app-header {
+    padding: 20px 10px;
+  }
+
+  .app-header h1 {
+    font-size: 24px;
+  }
+
+  .app-header p {
+    font-size: 14px;
+  }
+
+  .error-banner {
+    padding: 12px 15px;
+    font-size: 14px;
+  }
+}
