@@ -10,13 +10,25 @@ const bookSchema = new mongoose.Schema({
   author: {
     type: String,
     required: [true, 'Author name is required'],
-    trim: true
+    trim: true,
+    validate: {
+      validator: function(v) {
+        return /^[A-Za-z\s]+$/.test(v);
+      },
+      message: 'Author name should only contain alphabets and spaces'
+    }
   },
   isbn: {
     type: String,
     required: [true, 'ISBN number is required'],
     unique: true,
-    trim: true
+    trim: true,
+    validate: {
+      validator: function(v) {
+        return /^[A-Za-z0-9-]+$/.test(v);
+      },
+      message: 'ISBN should only contain letters, numbers, and hyphens'
+    }
   },
   year: {
     type: Number,

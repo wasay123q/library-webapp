@@ -43,6 +43,19 @@
   box-shadow: 0 4px 10px rgba(255, 71, 87, 0.3);
 }
 
+.loading-suspense {
+  text-align: center;
+  padding: 40px 20px;
+  font-size: 18px;
+  color: #666;
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
 .app-footer {
   text-align: center;
   padding: 25px 20px;

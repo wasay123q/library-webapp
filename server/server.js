@@ -14,6 +14,17 @@ const app = express();
 app.use(express.json()); 
 app.use(cors()); 
 
+// Enable HTTP cache headers for better performance
+app.use((req, res, next) => {
+  // Cache static resources for 1 hour, but always revalidate API data
+  if (req.url.startsWith('/api/')) {
+    res.set('Cache-Control', 'no-cache');
+  } else {
+    res.set('Cache-Control', 'public, max-age=3600');
+  }
+  next();
+});
+
 // Establish MongoDB database connection
 connectDB();
 

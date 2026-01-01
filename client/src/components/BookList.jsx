@@ -1,7 +1,7 @@
-import React from 'react';
+import React, { memo } from 'react';
 import './BookList.css';
 
-const BookList = ({ books, onBookDeleted, isLoading }) => {
+const BookList = memo(({ books, onBookDeleted, isLoading }) => {
   // Delete book with confirmation and error handling
   const handleDelete = async (bookId, bookTitle) => {
     // Confirm deletion with user
@@ -127,6 +127,6 @@ const BookList = ({ books, onBookDeleted, isLoading }) => {
       </div>
     </div>
   );
-};
+});
 
 export default BookList;

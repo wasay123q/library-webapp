@@ -1,7 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, lazy, Suspense, useCallback } from 'react';
 import './App.css';
-import BookForm from './components/BookForm.jsx';
-import BookList from './components/BookList.jsx';
+
+// Lazy load components for better performance
+const BookForm = lazy(() => import('./components/BookForm.jsx'));
+const BookList = lazy(() => import('./components/BookList.jsx'));
 
 function App() {
   // State management for books, loading, and error states
@@ -39,14 +41,14 @@ function App() {
   };
 
   // Add newly created book to the list without reloading
-  const handleBookAdded = (newBook) => {
+  const handleBookAdded = useCallback((newBook) => {
     setBooks(prevBooks => [newBook, ...prevBooks]);
-  };
+  }, []);
 
   // Remove deleted book from the list without reloading
-  const handleBookDeleted = (bookId) => {
+  const handleBookDeleted = useCallback((bookId) => {
     setBooks(prevBooks => prevBooks.filter(book => book._id !== bookId));
-  };
+  }, []);
 
   return (
     <div className="App">
@@ -59,15 +61,17 @@ function App() {
         {/* Display error banner if any errors occur */}
         {error && <div className="error-banner">{error}</div>}
         
-        {/* Book entry form with callback for adding books */}
-        <BookForm onBookAdded={handleBookAdded} />
-        
-        {/* Book list display with delete functionality */}
-        <BookList 
-          books={books} 
-          onBookDeleted={handleBookDeleted}
-          isLoading={isLoading}
-        />
+        <Suspense fallback={<div className="loading-suspense">Loading...</div>}>
+          {/* Book entry form with callback for adding books */}
+          <BookForm onBookAdded={handleBookAdded} />
+          
+          {/* Book list display with delete functionality */}
+          <BookList 
+            books={books} 
+            onBookDeleted={handleBookDeleted}
+            isLoading={isLoading}
+          />
+        </Suspense>
       </main>
 
       <footer className="app-footer">

@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, memo } from 'react';
 import './BookForm.css';
 
-const BookForm = ({ onBookAdded }) => {
+const BookForm = memo(({ onBookAdded }) => {
   // State for form input fields
   const [formData, setFormData] = useState({
     title: '',
@@ -31,6 +31,22 @@ const BookForm = ({ onBookAdded }) => {
     setIsSubmitting(true);
     setError('');
     setSuccess('');
+
+    // Validate author name (only alphabets and spaces)
+    const authorRegex = /^[A-Za-z\s]+$/;
+    if (!authorRegex.test(formData.author.trim())) {
+      setError('Author name should only contain alphabets and spaces.');
+      setIsSubmitting(false);
+      return;
+    }
+
+    // Validate ISBN (only alphanumeric and hyphens)
+    const isbnRegex = /^[A-Za-z0-9-]+$/;
+    if (!isbnRegex.test(formData.isbn.trim())) {
+      setError('ISBN should only contain letters, numbers, and hyphens.');
+      setIsSubmitting(false);
+      return;
+    }
 
     try {
       const response = await fetch('/api/books', {
@@ -147,6 +163,6 @@ const BookForm = ({ onBookAdded }) => {
       </form>
     </div>
   );
-};
+});
 
 export default BookForm;
